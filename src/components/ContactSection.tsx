@@ -116,9 +116,17 @@ export function ContactSection() {
         </div>
       </section>
 
-      <footer className="py-8 px-6 border-t border-purple-500/10">
-        <p className="text-center text-slate-500 text-sm">
-          &copy; {new Date().getFullYear()} Nathan Wong. All rights reserved.
+      <footer className="py-6 px-6 border-t border-slate-800/50">
+        <p className="text-center text-slate-600 text-sm">
+          Built with{" "}
+          <a
+            href="https://claude.ai/code"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-purple-400/70 hover:text-purple-400 transition-colors"
+          >
+            Claude Code
+          </a>
         </p>
       </footer>
     </>

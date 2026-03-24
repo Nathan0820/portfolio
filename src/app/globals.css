@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 ::selection {
   background-color: rgba(139, 92, 246, 0.3);
   color: white;
@@ -100,4 +104,24 @@
 
 .animate-particle {
   animation: particle 1s ease-out forwards;
+}
+
+@keyframes lanyard-swing {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(1.2deg);
+  }
+  50% {
+    transform: rotate(-0.8deg);
+  }
+  80% {
+    transform: rotate(0.5deg);
+  }
+}
+
+.animate-lanyard-swing {
+  animation: lanyard-swing 5s ease-in-out infinite;
 }
