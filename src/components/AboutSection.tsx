@@ -347,7 +347,7 @@ export function AboutSection() {
                   </div>
                   <a
                     href="/resume.pdf"
-                    download
+                    download="Resume.pdf"
                     className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 hover:border-blue-500/50 text-white text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105"
                   >
                     <svg className="w-4 h-4 text-purple-400 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">

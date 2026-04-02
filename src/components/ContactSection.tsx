@@ -55,13 +55,6 @@ export function ContactSection() {
               Get In Touch
             </span>
           </h2>
-          <p
-            className={`text-slate-400 mb-10 text-lg transition-all duration-700 delay-100 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            }`}
-          >
-            I&apos;m currently looking for internship opportunities. Feel free to reach out!
-          </p>
 
           <a
             href="mailto:nathanwyj0629@gmail.com"
