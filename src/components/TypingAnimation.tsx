@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const roles = ["Artificial Intelligence", "Machine Learning", "Software Engineering", "Deep Learning"];
+const roles = ["AI products", "machine learning systems", "full-stack apps", "useful interfaces"];
 
 export function TypingAnimation() {
   const [currentRole, setCurrentRole] = useState(0);
@@ -13,31 +13,34 @@ export function TypingAnimation() {
     const role = roles[currentRole];
     const timeout = setTimeout(
       () => {
-        if (!isDeleting) {
-          if (displayText.length < role.length) {
-            setDisplayText(role.substring(0, displayText.length + 1));
-          } else {
-            setTimeout(() => setIsDeleting(true), 2000);
-          }
-        } else {
-          if (displayText.length > 0) {
-            setDisplayText(displayText.substring(0, displayText.length - 1));
-          } else {
-            setIsDeleting(false);
-            setCurrentRole((currentRole + 1) % roles.length);
-          }
+        if (!isDeleting && displayText.length < role.length) {
+          setDisplayText(role.substring(0, displayText.length + 1));
+          return;
         }
+
+        if (!isDeleting) {
+          setIsDeleting(true);
+          return;
+        }
+
+        if (displayText.length > 0) {
+          setDisplayText(displayText.substring(0, displayText.length - 1));
+          return;
+        }
+
+        setIsDeleting(false);
+        setCurrentRole((currentRole + 1) % roles.length);
       },
-      isDeleting ? 50 : 100
+      isDeleting ? 34 : 78
     );
 
     return () => clearTimeout(timeout);
   }, [displayText, isDeleting, currentRole]);
 
   return (
-    <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+    <span className="inline-flex min-w-[13ch] items-center font-semibold text-blue-700">
       {displayText}
-      <span className="animate-pulse text-purple-400">|</span>
+      <span className="ml-1 h-5 w-px bg-blue-500 animate-pulse-subtle" />
     </span>
   );
 }
