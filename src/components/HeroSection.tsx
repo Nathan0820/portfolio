@@ -10,7 +10,7 @@ const metrics = [
   { label: "Years coding", value: "3" },
   { label: "Focus", value: "AI" },
 ];
-const marquee = ["Python", "React", "Next.js", "TypeScript", "TensorFlow", "Supabase", "PostgreSQL"];
+const marquee = ["Python", "React", "Next.js", "TypeScript", "TensorFlow", "Supabase", "PostgreSQL", "AI", "ML", "Full-stack"];
 
 const nowItems = [
   {
@@ -21,14 +21,14 @@ const nowItems = [
   },
   {
     kind: "Learning",
-    title: "Deep Learning Specialization",
-    detail: "Week 4 of 12",
+    title: "Software Engineering",
+    detail: "Focusing on building full-stack applications.",
     tone: "cyan",
   },
   {
-    kind: "Reading",
-    title: "Designing Data-Intensive Apps",
-    detail: "Chapter 6",
+    kind: "Learning",
+    title: "AI & ML",
+    detail: "Focusing on building AI & ML models.",
     tone: "indigo",
   },
 ];
@@ -36,7 +36,7 @@ const nowItems = [
 const availability = [
   {
     label: "Open to",
-    value: "Summer '26 internships",
+    value: "Summer '26 internships, Full-time internships",
     dot: "bg-emerald-400",
   },
   {
@@ -92,7 +92,7 @@ export function HeroSection() {
 
   return (
     <section className="relative flex min-h-screen items-center px-6 pb-20 pt-32">
-      <div className="mx-auto grid w-full max-w-[1520px] items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(680px,920px)] xl:gap-16">
+      <div className="mx-auto grid w-full max-w-[1520px] items-center gap-12 lg:grid-cols-2 xl:gap-16">
         <div className="relative z-10">
           <div
             className={`mb-6 flex flex-wrap gap-2 transition-all duration-700 ${
@@ -108,7 +108,7 @@ export function HeroSection() {
           </div>
 
           <h1
-            className={`max-w-4xl text-5xl font-black leading-[0.98] tracking-normal text-slate-950 transition-all delay-100 duration-700 md:text-7xl xl:text-8xl ${
+            className={`text-5xl font-black leading-[0.98] tracking-normal text-slate-950 transition-all delay-100 duration-700 md:text-7xl xl:text-8xl ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
@@ -179,18 +179,16 @@ export function HeroSection() {
                   <div className="w-full rounded-lg border border-white/10 bg-white/[0.08] p-4 backdrop-blur">
                     <div className="mb-4 flex items-center gap-2">
                       <span className="h-3 w-3 rounded-full bg-red-400" />
-                      <span className="h-3 w-3 rounded-full bg-cyan-300" />
-                      <span className="h-3 w-3 rounded-full bg-emerald-400" />
+                      <span className="h-3 w-3 rounded-full bg-yellow-300" />
+                      <span className="h-3 w-3 rounded-full bg-green-400" />
                     </div>
                     <pre className="overflow-hidden text-xs leading-6 text-slate-200">
 {`const focus = [
-  "useful websites",
-  "AI systems",
-  "usable products",
-  "clean frontend"
-];
-
-ship(focus);`}
+  "Full-stack apps",
+  "AI & ML models",
+  "Clean frontend",
+  "Clean backend"
+];`}
                     </pre>
                   </div>
 
@@ -201,7 +199,7 @@ ship(focus);`}
                     </div>
                     <div className="min-w-0 w-full rounded-lg border border-white/10 bg-white/[0.08] p-4">
                       <div className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Building</div>
-                      <div className="mt-2 text-lg font-black">ML apps</div>
+                      <div className="mt-2 text-lg font-black">Full-stack apps and ML models</div>
                     </div>
                   </div>
 

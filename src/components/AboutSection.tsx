@@ -122,10 +122,7 @@ export function AboutSection() {
           }`}
         >
           <span className="eyebrow">About</span>
-          <h2 className="section-title">A practical builder with an AI focus.</h2>
-          <p className="section-copy mt-5">
-            I like making complex ideas feel usable: clear interfaces, useful data flows, and products that are easy to test and improve.
-          </p>
+          <h2 className="section-title">A practical builder with an Software Engineering & ML focus</h2>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">

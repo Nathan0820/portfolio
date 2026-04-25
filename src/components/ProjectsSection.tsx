@@ -126,17 +126,20 @@ function ProjectCard({
   const cat = categoryStyle[project.category];
 
   return (
-    <button
-      type="button"
-      onClick={onExpand}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={resetTilt}
-      className={`interactive-card project-card group relative flex h-full flex-col overflow-hidden rounded-lg text-left transition-all duration-700 ${
+    <div
+      className={`h-full transition-all duration-700 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       }`}
       style={{ transitionDelay: `${index * 90}ms` }}
     >
-      <div className={`pointer-events-none absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r ${cat.accent}`} />
+      <button
+        type="button"
+        onClick={onExpand}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={resetTilt}
+        className="interactive-card project-card group relative flex h-full w-full flex-col overflow-hidden rounded-lg text-left"
+      >
+        <div className={`pointer-events-none absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r ${cat.accent}`} />
 
       <div className="relative m-3 aspect-[4/3] overflow-hidden rounded-md bg-slate-100">
         <Image
@@ -220,7 +223,8 @@ function ProjectCard({
           </span>
         </div>
       </div>
-    </button>
+      </button>
+    </div>
   );
 }
 
