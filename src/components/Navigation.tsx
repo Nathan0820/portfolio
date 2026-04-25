@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState } from "react";
 
 const navLinks = [
   { href: "#about", label: "About" },
@@ -12,218 +12,131 @@ const navLinks = [
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [indicatorStyle, setIndicatorStyle] = useState({ width: 0, left: 0 });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isNavigatingRef = useRef(false);
-  const navigateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const updateIndicator = useCallback((section: string) => {
-    const activeIndex = navLinks.findIndex((l) => l.href === `#${section}`);
-    if (activeIndex === -1) return;
-
-    const navContainer = document.getElementById("nav-links-container");
-    if (!navContainer) return;
-
-    const links = navContainer.querySelectorAll("a");
-    const activeLink = links[activeIndex];
-
-    if (activeLink) {
-      const containerRect = navContainer.getBoundingClientRect();
-      const linkRect = activeLink.getBoundingClientRect();
-
-      setIndicatorStyle({
-        width: linkRect.width,
-        left: linkRect.left - containerRect.left,
-      });
-    }
-  }, []);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 16);
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0);
 
-      if (isNavigatingRef.current) return;
-
-      const sections = ["about", "projects", "education", "contact"];
-      const viewportCenter = window.innerHeight / 2;
-
-      let closestSection = "";
-      let closestDistance = Infinity;
-
-      for (const id of sections) {
+      const sections = navLinks.map((link) => link.href.slice(1));
+      const active = sections.find((id) => {
         const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const sectionCenter = rect.top + rect.height / 2;
-          const distance = Math.abs(sectionCenter - viewportCenter);
-
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            closestSection = id;
-          }
-        }
-      }
-
-      if (closestSection) {
-        setActiveSection(closestSection);
-      }
-    };
-
-    const initTimer = setTimeout(() => {
-      handleScroll();
-    }, 100);
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      clearTimeout(initTimer);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (activeSection) {
-      const timer = requestAnimationFrame(() => {
-        updateIndicator(activeSection);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top <= 160 && rect.bottom >= 160;
       });
-      return () => cancelAnimationFrame(timer);
-    }
-  }, [activeSection, updateIndicator]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (activeSection) {
-        updateIndicator(activeSection);
-      }
+      if (active) setActiveSection(active);
     };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [activeSection, updateIndicator]);
 
-  useEffect(() => {
-    return () => {
-      if (navigateTimeoutRef.current) {
-        clearTimeout(navigateTimeoutRef.current);
-      }
-    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (section: string) => {
-    isNavigatingRef.current = true;
+  const closeMenu = (section: string) => {
     setActiveSection(section);
     setIsMobileMenuOpen(false);
-
-    if (navigateTimeoutRef.current) {
-      clearTimeout(navigateTimeoutRef.current);
-    }
-
-    navigateTimeoutRef.current = setTimeout(() => {
-      isNavigatingRef.current = false;
-    }, 800);
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? "py-3" : "py-5"
-      }`}
-    >
+    <header className="fixed left-0 right-0 top-0 z-50 px-4 py-4">
+      <div className="absolute left-0 right-0 top-0 h-1 bg-slate-950/5">
+        <div
+          className="h-full origin-left bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-500 transition-transform duration-150"
+          style={{ transform: `scaleX(${scrollProgress})` }}
+        />
+      </div>
       <nav
-        className={`mx-auto w-fit px-2 transition-all duration-500 ${
+        className={`mx-auto flex max-w-5xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 ${
           isScrolled
-            ? "backdrop-blur-2xl rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] shadow-purple-500/5"
-            : "bg-transparent"
+            ? "border-slate-200/80 bg-white/80 shadow-lg shadow-slate-900/10 backdrop-blur-xl"
+            : "border-white/50 bg-white/45 backdrop-blur-md"
         }`}
       >
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center justify-center py-2">
-          <div className="relative flex items-center" id="nav-links-container">
-            {/* Active indicator */}
-            <div
-              className="absolute inset-y-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full border border-white/10 transition-all duration-300 ease-out"
-              style={{
-                width: indicatorStyle.width > 0 ? `${indicatorStyle.width}px` : "0px",
-                left: `${indicatorStyle.left}px`,
-                opacity: indicatorStyle.width > 0 ? 1 : 0,
-              }}
-            />
-
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={`relative z-10 px-5 py-2 text-sm font-medium transition-all duration-300 ${
-                  activeSection === link.href.slice(1)
-                    ? "text-white"
-                    : "text-slate-400 hover:text-white"
-                }`}
-                onClick={() => handleNavClick(link.href.slice(1))}
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile: hamburger button */}
-        <div className="flex md:hidden items-center justify-end py-2">
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="relative z-10 p-2 text-white"
-            aria-label="Toggle menu"
-          >
-            <div className="w-6 h-5 relative flex flex-col justify-between">
-              <span
-                className={`w-full h-0.5 bg-current transform transition-all duration-300 origin-left ${
-                  isMobileMenuOpen ? "rotate-45 translate-x-0.5" : ""
-                }`}
-              />
-              <span
-                className={`w-full h-0.5 bg-current transition-all duration-300 ${
-                  isMobileMenuOpen ? "scale-x-0 opacity-0" : ""
-                }`}
-              />
-              <span
-                className={`w-full h-0.5 bg-current transform transition-all duration-300 origin-left ${
-                  isMobileMenuOpen ? "-rotate-45 translate-x-0.5" : ""
-                }`}
-              />
-            </div>
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-out ${
-            isMobileMenuOpen ? "max-h-80 opacity-100 mt-3 pb-3" : "max-h-0 opacity-0 mt-0"
-          }`}
+        <a
+          href="#"
+          className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold tracking-normal text-slate-950"
+          onClick={() => closeMenu("")}
         >
-          <div className="bg-white/[0.03] backdrop-blur-2xl rounded-2xl border border-white/10 p-4 space-y-1">
-            {navLinks.map((link) => (
+          <span className="grid h-8 w-8 place-items-center rounded-full bg-slate-950 text-xs font-black text-white">
+            NW
+          </span>
+          <span className="hidden sm:inline">Nathan Wong</span>
+        </a>
+
+        <div className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => {
+            const active = activeSection === link.href.slice(1);
+            return (
               <a
                 key={link.href}
                 href={link.href}
-                className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
-                  activeSection === link.href.slice(1)
-                    ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border border-white/10"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                onClick={() => closeMenu(link.href.slice(1))}
+                className={`rounded-full px-4 py-2 text-sm font-bold transition-all ${
+                  active
+                    ? "bg-slate-950 text-white shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                 }`}
-                onClick={() => handleNavClick(link.href.slice(1))}
               >
                 {link.label}
               </a>
-            ))}
-            <div className="pt-2">
-              <a
-                href="#contact"
-                className="block text-center px-5 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Let&apos;s Talk
-              </a>
-            </div>
-          </div>
+            );
+          })}
         </div>
+
+        <a href="#contact" className="btn-primary hidden px-4 py-2 text-sm md:inline-flex">
+          Let&apos;s talk
+        </a>
+
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen((open) => !open)}
+          className="grid h-10 w-10 place-items-center rounded-full border border-slate-200 bg-white text-slate-800 md:hidden"
+          aria-label="Toggle navigation menu"
+          aria-expanded={isMobileMenuOpen}
+        >
+          <span className="relative block h-4 w-5">
+            <span
+              className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-transform ${
+                isMobileMenuOpen ? "translate-y-2 rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`absolute left-0 top-2 h-0.5 w-5 rounded-full bg-current transition-opacity ${
+                isMobileMenuOpen ? "opacity-0" : "opacity-100"
+              }`}
+            />
+            <span
+              className={`absolute left-0 top-4 h-0.5 w-5 rounded-full bg-current transition-transform ${
+                isMobileMenuOpen ? "-translate-y-2 -rotate-45" : ""
+              }`}
+            />
+          </span>
+        </button>
       </nav>
+
+      <div
+        className={`mx-auto mt-2 max-w-5xl overflow-hidden rounded-lg border border-slate-200/80 bg-white/95 shadow-xl shadow-slate-900/10 backdrop-blur-xl transition-all duration-300 md:hidden ${
+          isMobileMenuOpen ? "max-h-80 opacity-100" : "max-h-0 border-transparent opacity-0"
+        }`}
+      >
+        <div className="grid gap-1 p-3">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="rounded-lg px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-100"
+              onClick={() => closeMenu(link.href.slice(1))}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
     </header>
   );
 }
